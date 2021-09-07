@@ -1,4 +1,3 @@
-
 # allude
 Building precise functionality from vague specifications
 

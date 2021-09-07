@@ -21,7 +21,7 @@ class FuncWrap:
         return self.func(*args, **kwargs)
 
     def __repr__(self):
-        return f"FuncWrap({repr(self.func)})"
+        return f'FuncWrap({repr(self.func)})'
 
 
 # def func_op_obj(*args, op, func, obj, **kwargs):
@@ -34,11 +34,9 @@ def func_op_obj(op, func, obj):
 
 
 def func_op_func(
-    op,
-    func1,
-    func2,
+    op, func1, func2,
 ):
-    return Pipe(DAG([func1, func2]), methodcaller("values"), map_star(op))
+    return Pipe(DAG([func1, func2]), methodcaller('values'), map_star(op))
 
 
 class OperableFunc(FuncWrap):
@@ -65,16 +63,14 @@ def mk_proportional_change_func(
     proportion_argname: str = None,
     name: str = None,
 ):
-    name = name or f"{evidence_argname}_to_{prior_argname}"
-    proportion_argname = proportion_argname or f"{prior_argname}_{evidence_argname}"
+    name = name or f'{evidence_argname}_to_{prior_argname}'
+    proportion_argname = proportion_argname or f'{prior_argname}_{evidence_argname}'
     func = OperableFunc(partial(proportional_change, proportion=proportion))
     # func = OperableFunc(proportional_change)
     sig = Sig(func)
     # sig = sig.ch_defaults(proportion=proportion)
     sig = sig.ch_names(
-        prior=prior_argname,
-        evidence=evidence_argname,
-        proportion=proportion_argname,
+        prior=prior_argname, evidence=evidence_argname, proportion=proportion_argname,
     )
 
     sig(func)

@@ -16,6 +16,39 @@ def transparent_egress(output):
     return output
 
 
+"""
+    How Wrap works:
+    
+    ```
+     *interface_args, **interface_kwargs
+                     │
+                     ▼
+    ┌───────────────────────────────────┐
+    │              ingress              │
+    └───────────────────────────────────┘
+                     │
+                     ▼
+          *func_args, **func_kwargs
+                     │
+                     ▼
+    ┌───────────────────────────────────┐
+    │               func                │
+    └───────────────────────────────────┘
+                     │
+                     ▼
+                 func_output
+                     │
+                     ▼
+    ┌───────────────────────────────────┐
+    │              egress               │
+    └───────────────────────────────────┘
+                     │
+                     ▼
+                final_output
+    ```
+"""
+
+
 class Wrap:
     """A callable function wrapper with interface modifiers.
 
@@ -53,35 +86,6 @@ class Wrap:
     .. seealso::
 
         ``wrap`` function.
-
-    How it works:
-
-
-     *interface_args, **interface_kwargs
-                     │
-                     ▼
-    ┌───────────────────────────────────┐
-    │              ingress              │
-    └───────────────────────────────────┘
-                     │
-                     ▼
-          *func_args, **func_kwargs
-                     │
-                     ▼
-    ┌───────────────────────────────────┐
-    │               func                │
-    └───────────────────────────────────┘
-                     │
-                     ▼
-                 func_output
-                     │
-                     ▼
-    ┌───────────────────────────────────┐
-    │              egress               │
-    └───────────────────────────────────┘
-                     │
-                     ▼
-                final_output
 
     """
 
@@ -132,27 +136,6 @@ def wrap(func, ingress=None, egress=None):
         wrapped function to determine the return annotation of the ``Wrap`` instance
     :return: A callable instance wrapping ``func``
 
-    >>> from inspect import signature
-    >>> from i2 import Sig
-    >>>
-    >>> def ingress(a, b: str, c="hi"):
-    ...     return (a + len(b) % 2,), dict(string=f"{c} {b}")
-    ...
-    >>> def func(times, string):
-    ...     return times * string
-    ...
-    >>> wrapped_func = wrap(func)  # no transformations
-    >>> assert wrapped_func(2, "co") == "coco" == func(2, "co")
-    >>>
-    >>> wrapped_func = wrap(func, ingress)
-    >>> assert wrapped_func(2, "world! ", "Hi") == "Hi world! Hi world! Hi world! "
-    >>>
-    >>> wrapped_func = wrap(func, egress=len)
-    >>> assert wrapped_func(2, "co") == 4 == len("coco") == len(func(2, "co"))
-    >>>
-    >>> wrapped_func = wrap(func, ingress, egress=len)
-    >>> assert wrapped_func(2, "world! ", "Hi") == 30 == len("Hi world! Hi world! Hi world! ")
-
     Consider the following function.
 
     >>> def f(w, /, x: float = 1, y=2, *, z: int = 3):
@@ -177,8 +160,8 @@ def wrap(func, ingress=None, egress=None):
 
     Say we wanted a version of this function that didn't have the argument kind
     restrinctions, where the annotation of ``x`` was ``int`` and where the default
-    of ``z`` was ``10`` instead of ``3``. We can do so using the following ingress
-    function:
+    of ``z`` was ``10`` instead of ``3``, and doesn't have an annotation.
+    We can do so using the following ingress function:
 
     >>> def ingress(w, x: int = 1, y: int=2, z = 10):
     ...     return (w,), dict(x=x, y=y, z=z)
@@ -275,30 +258,49 @@ class InnerMapIngress:
         :param _allow_reordering:
         :param changes_for_name:
 
-        >>> def f(w, /, x: float = 1, y=2, *, z: int = 3):
-        ...     return w + x * y ** z
-        ...
-        >>> assert f(0) == 8
-        >>> assert f(1,2) == 17 == 1 + 2 * 2 ** 3
-
-        See that ``f`` is restricted to use ``z`` as keyword only argument kind:
-
-        >>> f(1,2,3,4)
-        Traceback (most recent call last):
-          ...
-        TypeError: f() takes from 1 to 3 positional arguments but 4 were given
-
-        and ``w`` has position only argument kind:
-
-        >>> f(w=1,x=2,y=3,z=4)
-        Traceback (most recent call last):
-          ...
-        TypeError: f() got some positional-only arguments passed as keyword arguments: 'w'
-
         Say we wanted a version of this function that didn't have the argument kind
         restrinctions, where the annotation of ``x`` was ``int`` and where the default
-        of ``z`` was ``10`` instead of ``3``.
+        of ``z`` was ``10`` instead of ``3``, and doesn't have an annotation.
 
+        Let's take the same function mentioned in the docs of ``wrap``
+
+        >>> def f(w, /, x: float = 1, y=2, *, z: int = 3):
+        ...     return w + x * y ** z
+
+        In order to get a version of this function we wanted (more lenient kinds,
+        with some annotations and a default change), we used the ingress function:
+
+        >>> def ingress_we_used(w, x: int = 1, y: int=2, z = 10):
+        ...     return (w,), dict(x=x, y=y, z=z)
+
+        Defining an ingress function this way is usually the simplest way to get a
+        a wrapped function. But in some cases we need to build the ingress function
+        using some predefined rule/protocol. For those cases, ``InnerMapIngress``
+        could come in handy.
+
+        You would build your ``ingress`` function like this, for example:
+
+        >>> from inspect import Parameter, signature
+        >>> PK = Parameter.POSITIONAL_OR_KEYWORD
+        >>> not_specified = Parameter.empty
+        >>> ingress = InnerMapIngress(
+        ...     f,
+        ...     w=dict(kind=PK),  # change kind to PK
+        ...     x=dict(annotation=int),  # change annotation from float to int
+        ...     y=dict(annotation=int),  # add annotation int
+        ...     # change kind to PK, default to 10, and remove annotation:
+        ...     z=dict(kind=PK, default=10, annotation=not_specified),
+        ... )
+        >>> assert (
+        ...     str(signature(ingress))
+        ...     == str(signature(ingress_we_used))
+        ...     == '(w, x: int = 1, y: int = 2, z=10)'
+        ... )
+        >>> assert (
+        ...     ingress(0,1,2,3)
+        ...     == ingress_we_used(0,1,2,3)
+        ...     == ((0,), {'x': 1, 'y': 2, 'z': 3})
+        ... )
 
         """
         self.inner_sig = Sig(inner_sig)

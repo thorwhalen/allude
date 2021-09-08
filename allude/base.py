@@ -17,6 +17,74 @@ def transparent_egress(output):
 
 
 class Wrap:
+    """A callable function wrapper with interface modifiers.
+
+    :param func: The wrapped function
+    :param ingress: The incoming data transformer. It determines the argument properties
+        (name, kind, default and annotation) as well as the actual input of the
+        wrapped function.
+    :param egress: The outgoing data transformer. It also takes precedence over the
+        wrapped function to determine the return annotation of the ``Wrap`` instance
+    :return: A callable instance wrapping ``func``
+
+    Some examples:
+
+    >>> from inspect import signature
+    >>> from i2 import Sig
+    >>>
+    >>> def ingress(a, b: str, c="hi"):
+    ...     return (a + len(b) % 2,), dict(string=f"{c} {b}")
+    ...
+    >>> def func(times, string):
+    ...     return times * string
+    ...
+    >>> wrapped_func = wrap(func)  # no transformations
+    >>> assert wrapped_func(2, "co") == "coco" == func(2, "co")
+    >>>
+    >>> wrapped_func = wrap(func, ingress)
+    >>> assert wrapped_func(2, "world! ", "Hi") == "Hi world! Hi world! Hi world! "
+    >>>
+    >>> wrapped_func = wrap(func, egress=len)
+    >>> assert wrapped_func(2, "co") == 4 == len("coco") == len(func(2, "co"))
+    >>>
+    >>> wrapped_func = wrap(func, ingress, egress=len)
+    >>> assert wrapped_func(2, "world! ", "Hi") == 30 == len("Hi world! Hi world! Hi world! ")
+
+    .. seealso::
+
+        ``wrap`` function.
+
+    How it works:
+
+
+     *interface_args, **interface_kwargs
+                     │
+                     ▼
+    ┌───────────────────────────────────┐
+    │              ingress              │
+    └───────────────────────────────────┘
+                     │
+                     ▼
+          *func_args, **func_kwargs
+                     │
+                     ▼
+    ┌───────────────────────────────────┐
+    │               func                │
+    └───────────────────────────────────┘
+                     │
+                     ▼
+                 func_output
+                     │
+                     ▼
+    ┌───────────────────────────────────┐
+    │              egress               │
+    └───────────────────────────────────┘
+                     │
+                     ▼
+                final_output
+
+    """
+
     def __init__(self, func, ingress=None, egress=None):
         self.func = func
         wraps(func)(self)  # TODO: should we really copy everything by default?
@@ -54,12 +122,15 @@ class Wrap:
 
 
 def wrap(func, ingress=None, egress=None):
-    """
+    """Wrap a function, optionally transforming interface, input and output.
 
-    :param func:
-    :param ingress:
-    :param egress:
-    :return:
+    :param func: The wrapped function
+    :param ingress: The incoming data transformer. It determines the argument properties
+        (name, kind, default and annotation) as well as the actual input of the
+        wrapped function.
+    :param egress: The outgoing data transformer. It also takes precedence over the
+        wrapped function to determine the return annotation of the ``Wrap`` instance
+    :return: A callable instance wrapping ``func``
 
     >>> from inspect import signature
     >>> from i2 import Sig
@@ -81,7 +152,6 @@ def wrap(func, ingress=None, egress=None):
     >>>
     >>> wrapped_func = wrap(func, ingress, egress=len)
     >>> assert wrapped_func(2, "world! ", "Hi") == 30 == len("Hi world! Hi world! Hi world! ")
-
 
     Consider the following function.
 

@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>allude.base &#8212; allude 0.1.0 documentation</title>
+    <title>allude.base &#8212; allude 0.1.1 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -51,7 +51,75 @@
     <span class="k">return</span> <span class="n">output</span>
 
 
-<span class="k">class</span> <span class="nc">Wrap</span><span class="p">:</span>
+<div class="viewcode-block" id="Wrap"><a class="viewcode-back" href="../../module_docs/allude/base.html#allude.base.Wrap">[docs]</a><span class="k">class</span> <span class="nc">Wrap</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A callable function wrapper with interface modifiers.</span>
+
+<span class="sd">    :param func: The wrapped function</span>
+<span class="sd">    :param ingress: The incoming data transformer. It determines the argument properties</span>
+<span class="sd">        (name, kind, default and annotation) as well as the actual input of the</span>
+<span class="sd">        wrapped function.</span>
+<span class="sd">    :param egress: The outgoing data transformer. It also takes precedence over the</span>
+<span class="sd">        wrapped function to determine the return annotation of the ``Wrap`` instance</span>
+<span class="sd">    :return: A callable instance wrapping ``func``</span>
+
+<span class="sd">    Some examples:</span>
+
+<span class="sd">    &gt;&gt;&gt; from inspect import signature</span>
+<span class="sd">    &gt;&gt;&gt; from i2 import Sig</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; def ingress(a, b: str, c=&quot;hi&quot;):</span>
+<span class="sd">    ...     return (a + len(b) % 2,), dict(string=f&quot;{c} {b}&quot;)</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; def func(times, string):</span>
+<span class="sd">    ...     return times * string</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; wrapped_func = wrap(func)  # no transformations</span>
+<span class="sd">    &gt;&gt;&gt; assert wrapped_func(2, &quot;co&quot;) == &quot;coco&quot; == func(2, &quot;co&quot;)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; wrapped_func = wrap(func, ingress)</span>
+<span class="sd">    &gt;&gt;&gt; assert wrapped_func(2, &quot;world! &quot;, &quot;Hi&quot;) == &quot;Hi world! Hi world! Hi world! &quot;</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; wrapped_func = wrap(func, egress=len)</span>
+<span class="sd">    &gt;&gt;&gt; assert wrapped_func(2, &quot;co&quot;) == 4 == len(&quot;coco&quot;) == len(func(2, &quot;co&quot;))</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; wrapped_func = wrap(func, ingress, egress=len)</span>
+<span class="sd">    &gt;&gt;&gt; assert wrapped_func(2, &quot;world! &quot;, &quot;Hi&quot;) == 30 == len(&quot;Hi world! Hi world! Hi world! &quot;)</span>
+
+<span class="sd">    .. seealso::</span>
+
+<span class="sd">        ``wrap`` function.</span>
+
+<span class="sd">    How it works:</span>
+
+
+<span class="sd">     *interface_args, **interface_kwargs</span>
+<span class="sd">                     │</span>
+<span class="sd">                     ▼</span>
+<span class="sd">    ┌───────────────────────────────────┐</span>
+<span class="sd">    │              ingress              │</span>
+<span class="sd">    └───────────────────────────────────┘</span>
+<span class="sd">                     │</span>
+<span class="sd">                     ▼</span>
+<span class="sd">          *func_args, **func_kwargs</span>
+<span class="sd">                     │</span>
+<span class="sd">                     ▼</span>
+<span class="sd">    ┌───────────────────────────────────┐</span>
+<span class="sd">    │               func                │</span>
+<span class="sd">    └───────────────────────────────────┘</span>
+<span class="sd">                     │</span>
+<span class="sd">                     ▼</span>
+<span class="sd">                 func_output</span>
+<span class="sd">                     │</span>
+<span class="sd">                     ▼</span>
+<span class="sd">    ┌───────────────────────────────────┐</span>
+<span class="sd">    │              egress               │</span>
+<span class="sd">    └───────────────────────────────────┘</span>
+<span class="sd">                     │</span>
+<span class="sd">                     ▼</span>
+<span class="sd">                final_output</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">ingress</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">egress</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func</span> <span class="o">=</span> <span class="n">func</span>
         <span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)(</span><span class="bp">self</span><span class="p">)</span>  <span class="c1"># TODO: should we really copy everything by default?</span>
@@ -85,16 +153,19 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">egress</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">func_args</span><span class="p">,</span> <span class="o">**</span><span class="n">func_kwargs</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">__reduce__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ingress</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egress</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ingress</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_egress</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="wrap"><a class="viewcode-back" href="../../module_docs/allude/base.html#allude.base.wrap">[docs]</a><span class="k">def</span> <span class="nf">wrap</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">ingress</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">egress</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Wrap a function, optionally transforming interface, input and output.</span>
 
-<span class="sd">    :param func:</span>
-<span class="sd">    :param ingress:</span>
-<span class="sd">    :param egress:</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :param func: The wrapped function</span>
+<span class="sd">    :param ingress: The incoming data transformer. It determines the argument properties</span>
+<span class="sd">        (name, kind, default and annotation) as well as the actual input of the</span>
+<span class="sd">        wrapped function.</span>
+<span class="sd">    :param egress: The outgoing data transformer. It also takes precedence over the</span>
+<span class="sd">        wrapped function to determine the return annotation of the ``Wrap`` instance</span>
+<span class="sd">    :return: A callable instance wrapping ``func``</span>
 
 <span class="sd">    &gt;&gt;&gt; from inspect import signature</span>
 <span class="sd">    &gt;&gt;&gt; from i2 import Sig</span>
@@ -116,7 +187,6 @@
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt; wrapped_func = wrap(func, ingress, egress=len)</span>
 <span class="sd">    &gt;&gt;&gt; assert wrapped_func(2, &quot;world! &quot;, &quot;Hi&quot;) == 30 == len(&quot;Hi world! Hi world! Hi world! &quot;)</span>
-
 
 <span class="sd">    Consider the following function.</span>
 

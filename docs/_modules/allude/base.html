@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>allude.base &#8212; allude 0.1.1 documentation</title>
+    <title>allude.base &#8212; allude 0.1.2 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -51,6 +51,39 @@
     <span class="k">return</span> <span class="n">output</span>
 
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    How Wrap works:</span>
+<span class="sd">    </span>
+<span class="sd">    ```</span>
+<span class="sd">     *interface_args, **interface_kwargs</span>
+<span class="sd">                     │</span>
+<span class="sd">                     ▼</span>
+<span class="sd">    ┌───────────────────────────────────┐</span>
+<span class="sd">    │              ingress              │</span>
+<span class="sd">    └───────────────────────────────────┘</span>
+<span class="sd">                     │</span>
+<span class="sd">                     ▼</span>
+<span class="sd">          *func_args, **func_kwargs</span>
+<span class="sd">                     │</span>
+<span class="sd">                     ▼</span>
+<span class="sd">    ┌───────────────────────────────────┐</span>
+<span class="sd">    │               func                │</span>
+<span class="sd">    └───────────────────────────────────┘</span>
+<span class="sd">                     │</span>
+<span class="sd">                     ▼</span>
+<span class="sd">                 func_output</span>
+<span class="sd">                     │</span>
+<span class="sd">                     ▼</span>
+<span class="sd">    ┌───────────────────────────────────┐</span>
+<span class="sd">    │              egress               │</span>
+<span class="sd">    └───────────────────────────────────┘</span>
+<span class="sd">                     │</span>
+<span class="sd">                     ▼</span>
+<span class="sd">                final_output</span>
+<span class="sd">    ```</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
 <div class="viewcode-block" id="Wrap"><a class="viewcode-back" href="../../module_docs/allude/base.html#allude.base.Wrap">[docs]</a><span class="k">class</span> <span class="nc">Wrap</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;A callable function wrapper with interface modifiers.</span>
 
@@ -88,35 +121,6 @@
 <span class="sd">    .. seealso::</span>
 
 <span class="sd">        ``wrap`` function.</span>
-
-<span class="sd">    How it works:</span>
-
-
-<span class="sd">     *interface_args, **interface_kwargs</span>
-<span class="sd">                     │</span>
-<span class="sd">                     ▼</span>
-<span class="sd">    ┌───────────────────────────────────┐</span>
-<span class="sd">    │              ingress              │</span>
-<span class="sd">    └───────────────────────────────────┘</span>
-<span class="sd">                     │</span>
-<span class="sd">                     ▼</span>
-<span class="sd">          *func_args, **func_kwargs</span>
-<span class="sd">                     │</span>
-<span class="sd">                     ▼</span>
-<span class="sd">    ┌───────────────────────────────────┐</span>
-<span class="sd">    │               func                │</span>
-<span class="sd">    └───────────────────────────────────┘</span>
-<span class="sd">                     │</span>
-<span class="sd">                     ▼</span>
-<span class="sd">                 func_output</span>
-<span class="sd">                     │</span>
-<span class="sd">                     ▼</span>
-<span class="sd">    ┌───────────────────────────────────┐</span>
-<span class="sd">    │              egress               │</span>
-<span class="sd">    └───────────────────────────────────┘</span>
-<span class="sd">                     │</span>
-<span class="sd">                     ▼</span>
-<span class="sd">                final_output</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -167,27 +171,6 @@
 <span class="sd">        wrapped function to determine the return annotation of the ``Wrap`` instance</span>
 <span class="sd">    :return: A callable instance wrapping ``func``</span>
 
-<span class="sd">    &gt;&gt;&gt; from inspect import signature</span>
-<span class="sd">    &gt;&gt;&gt; from i2 import Sig</span>
-<span class="sd">    &gt;&gt;&gt;</span>
-<span class="sd">    &gt;&gt;&gt; def ingress(a, b: str, c=&quot;hi&quot;):</span>
-<span class="sd">    ...     return (a + len(b) % 2,), dict(string=f&quot;{c} {b}&quot;)</span>
-<span class="sd">    ...</span>
-<span class="sd">    &gt;&gt;&gt; def func(times, string):</span>
-<span class="sd">    ...     return times * string</span>
-<span class="sd">    ...</span>
-<span class="sd">    &gt;&gt;&gt; wrapped_func = wrap(func)  # no transformations</span>
-<span class="sd">    &gt;&gt;&gt; assert wrapped_func(2, &quot;co&quot;) == &quot;coco&quot; == func(2, &quot;co&quot;)</span>
-<span class="sd">    &gt;&gt;&gt;</span>
-<span class="sd">    &gt;&gt;&gt; wrapped_func = wrap(func, ingress)</span>
-<span class="sd">    &gt;&gt;&gt; assert wrapped_func(2, &quot;world! &quot;, &quot;Hi&quot;) == &quot;Hi world! Hi world! Hi world! &quot;</span>
-<span class="sd">    &gt;&gt;&gt;</span>
-<span class="sd">    &gt;&gt;&gt; wrapped_func = wrap(func, egress=len)</span>
-<span class="sd">    &gt;&gt;&gt; assert wrapped_func(2, &quot;co&quot;) == 4 == len(&quot;coco&quot;) == len(func(2, &quot;co&quot;))</span>
-<span class="sd">    &gt;&gt;&gt;</span>
-<span class="sd">    &gt;&gt;&gt; wrapped_func = wrap(func, ingress, egress=len)</span>
-<span class="sd">    &gt;&gt;&gt; assert wrapped_func(2, &quot;world! &quot;, &quot;Hi&quot;) == 30 == len(&quot;Hi world! Hi world! Hi world! &quot;)</span>
-
 <span class="sd">    Consider the following function.</span>
 
 <span class="sd">    &gt;&gt;&gt; def f(w, /, x: float = 1, y=2, *, z: int = 3):</span>
@@ -212,8 +195,8 @@
 
 <span class="sd">    Say we wanted a version of this function that didn&#39;t have the argument kind</span>
 <span class="sd">    restrinctions, where the annotation of ``x`` was ``int`` and where the default</span>
-<span class="sd">    of ``z`` was ``10`` instead of ``3``. We can do so using the following ingress</span>
-<span class="sd">    function:</span>
+<span class="sd">    of ``z`` was ``10`` instead of ``3``, and doesn&#39;t have an annotation.</span>
+<span class="sd">    We can do so using the following ingress function:</span>
 
 <span class="sd">    &gt;&gt;&gt; def ingress(w, x: int = 1, y: int=2, z = 10):</span>
 <span class="sd">    ...     return (w,), dict(x=x, y=y, z=z)</span>
@@ -310,30 +293,49 @@
 <span class="sd">        :param _allow_reordering:</span>
 <span class="sd">        :param changes_for_name:</span>
 
-<span class="sd">        &gt;&gt;&gt; def f(w, /, x: float = 1, y=2, *, z: int = 3):</span>
-<span class="sd">        ...     return w + x * y ** z</span>
-<span class="sd">        ...</span>
-<span class="sd">        &gt;&gt;&gt; assert f(0) == 8</span>
-<span class="sd">        &gt;&gt;&gt; assert f(1,2) == 17 == 1 + 2 * 2 ** 3</span>
-
-<span class="sd">        See that ``f`` is restricted to use ``z`` as keyword only argument kind:</span>
-
-<span class="sd">        &gt;&gt;&gt; f(1,2,3,4)</span>
-<span class="sd">        Traceback (most recent call last):</span>
-<span class="sd">          ...</span>
-<span class="sd">        TypeError: f() takes from 1 to 3 positional arguments but 4 were given</span>
-
-<span class="sd">        and ``w`` has position only argument kind:</span>
-
-<span class="sd">        &gt;&gt;&gt; f(w=1,x=2,y=3,z=4)</span>
-<span class="sd">        Traceback (most recent call last):</span>
-<span class="sd">          ...</span>
-<span class="sd">        TypeError: f() got some positional-only arguments passed as keyword arguments: &#39;w&#39;</span>
-
 <span class="sd">        Say we wanted a version of this function that didn&#39;t have the argument kind</span>
 <span class="sd">        restrinctions, where the annotation of ``x`` was ``int`` and where the default</span>
-<span class="sd">        of ``z`` was ``10`` instead of ``3``.</span>
+<span class="sd">        of ``z`` was ``10`` instead of ``3``, and doesn&#39;t have an annotation.</span>
 
+<span class="sd">        Let&#39;s take the same function mentioned in the docs of ``wrap``</span>
+
+<span class="sd">        &gt;&gt;&gt; def f(w, /, x: float = 1, y=2, *, z: int = 3):</span>
+<span class="sd">        ...     return w + x * y ** z</span>
+
+<span class="sd">        In order to get a version of this function we wanted (more lenient kinds,</span>
+<span class="sd">        with some annotations and a default change), we used the ingress function:</span>
+
+<span class="sd">        &gt;&gt;&gt; def ingress_we_used(w, x: int = 1, y: int=2, z = 10):</span>
+<span class="sd">        ...     return (w,), dict(x=x, y=y, z=z)</span>
+
+<span class="sd">        Defining an ingress function this way is usually the simplest way to get a</span>
+<span class="sd">        a wrapped function. But in some cases we need to build the ingress function</span>
+<span class="sd">        using some predefined rule/protocol. For those cases, ``InnerMapIngress``</span>
+<span class="sd">        could come in handy.</span>
+
+<span class="sd">        You would build your ``ingress`` function like this, for example:</span>
+
+<span class="sd">        &gt;&gt;&gt; from inspect import Parameter, signature</span>
+<span class="sd">        &gt;&gt;&gt; PK = Parameter.POSITIONAL_OR_KEYWORD</span>
+<span class="sd">        &gt;&gt;&gt; not_specified = Parameter.empty</span>
+<span class="sd">        &gt;&gt;&gt; ingress = InnerMapIngress(</span>
+<span class="sd">        ...     f,</span>
+<span class="sd">        ...     w=dict(kind=PK),  # change kind to PK</span>
+<span class="sd">        ...     x=dict(annotation=int),  # change annotation from float to int</span>
+<span class="sd">        ...     y=dict(annotation=int),  # add annotation int</span>
+<span class="sd">        ...     # change kind to PK, default to 10, and remove annotation:</span>
+<span class="sd">        ...     z=dict(kind=PK, default=10, annotation=not_specified),</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; assert (</span>
+<span class="sd">        ...     str(signature(ingress))</span>
+<span class="sd">        ...     == str(signature(ingress_we_used))</span>
+<span class="sd">        ...     == &#39;(w, x: int = 1, y: int = 2, z=10)&#39;</span>
+<span class="sd">        ... )</span>
+<span class="sd">        &gt;&gt;&gt; assert (</span>
+<span class="sd">        ...     ingress(0,1,2,3)</span>
+<span class="sd">        ...     == ingress_we_used(0,1,2,3)</span>
+<span class="sd">        ...     == ((0,), {&#39;x&#39;: 1, &#39;y&#39;: 2, &#39;z&#39;: 3})</span>
+<span class="sd">        ... )</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inner_sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">inner_sig</span><span class="p">)</span>

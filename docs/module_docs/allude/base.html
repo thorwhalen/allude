@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>allude.base &#8212; allude 0.1.1 documentation</title>
+    <title>allude.base &#8212; allude 0.1.2 documentation</title>
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
@@ -84,52 +84,6 @@ wrapped function to determine the return annotation of the <code class="docutils
 <p class="admonition-title">See also</p>
 <p><code class="docutils literal notranslate"><span class="pre">wrap</span></code> function.</p>
 </div>
-<p>How it works:</p>
-<blockquote>
-<div><dl class="simple">
-<dt><a href="#id1"><span class="problematic" id="id2">*</span></a>interface_args, <a href="#id3"><span class="problematic" id="id4">**</span></a>interface_kwargs</dt><dd><p>│
-▼</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>┌───────────────────────────────────┐
-│              ingress              │
-└───────────────────────────────────┘</p>
-<blockquote>
-<div><blockquote>
-<div><p>│
-▼</p>
-</div></blockquote>
-<dl class="simple">
-<dt><a href="#id5"><span class="problematic" id="id6">*</span></a>func_args, <a href="#id7"><span class="problematic" id="id8">**</span></a>func_kwargs</dt><dd><p>│
-▼</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>┌───────────────────────────────────┐
-│               func                │
-└───────────────────────────────────┘</p>
-<blockquote>
-<div><blockquote>
-<div><p>│
-▼</p>
-</div></blockquote>
-<dl class="simple">
-<dt>func_output</dt><dd><p>│
-▼</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>┌───────────────────────────────────┐
-│              egress               │
-└───────────────────────────────────┘</p>
-<blockquote>
-<div><blockquote>
-<div><p>│
-▼</p>
-</div></blockquote>
-<p>final_output</p>
-</div></blockquote>
 </dd></dl>
 
 <dl class="py function">
@@ -177,28 +131,6 @@ wrapped function to determine the return annotation of the <code class="docutils
 <dd class="field-even"><p>A callable instance wrapping <code class="docutils literal notranslate"><span class="pre">func</span></code></p>
 </dd>
 </dl>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">ingress</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;hi&quot;</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span><span class="p">,),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">string</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="gp">...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">times</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="k">return</span> <span class="n">times</span> <span class="o">*</span> <span class="n">string</span>
-<span class="gp">...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">wrapped_func</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>  <span class="c1"># no transformations</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">wrapped_func</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;co&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;coco&quot;</span> <span class="o">==</span> <span class="n">func</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;co&quot;</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">wrapped_func</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">ingress</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">wrapped_func</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;world! &quot;</span><span class="p">,</span> <span class="s2">&quot;Hi&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;Hi world! Hi world! Hi world! &quot;</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">wrapped_func</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">egress</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">wrapped_func</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;co&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="s2">&quot;coco&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;co&quot;</span><span class="p">))</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">wrapped_func</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">ingress</span><span class="p">,</span> <span class="n">egress</span><span class="o">=</span><span class="nb">len</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">wrapped_func</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;world! &quot;</span><span class="p">,</span> <span class="s2">&quot;Hi&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">30</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="s2">&quot;Hi world! Hi world! Hi world! &quot;</span><span class="p">)</span>
-</pre></div>
-</div>
 <p>Consider the following function.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">w</span> <span class="o">+</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="o">**</span> <span class="n">z</span>
@@ -223,8 +155,8 @@ wrapped function to determine the return annotation of the <code class="docutils
 </div>
 <p>Say we wanted a version of this function that didn’t have the argument kind
 restrinctions, where the annotation of <code class="docutils literal notranslate"><span class="pre">x</span></code> was <code class="docutils literal notranslate"><span class="pre">int</span></code> and where the default
-of <code class="docutils literal notranslate"><span class="pre">z</span></code> was <code class="docutils literal notranslate"><span class="pre">10</span></code> instead of <code class="docutils literal notranslate"><span class="pre">3</span></code>. We can do so using the following ingress
-function:</p>
+of <code class="docutils literal notranslate"><span class="pre">z</span></code> was <code class="docutils literal notranslate"><span class="pre">10</span></code> instead of <code class="docutils literal notranslate"><span class="pre">3</span></code>, and doesn’t have an annotation.
+We can do so using the following ingress function:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">ingress</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="p">(</span><span class="n">w</span><span class="p">,),</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
 </pre></div>

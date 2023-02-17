@@ -10,6 +10,19 @@ from lined.util import func_name
 from meshed import DAG
 from meshed.util import func_name
 
+try:
+    import importlib.resources
+
+    _files = importlib.resources.files  # only valid in 3.9+
+except AttributeError:
+    import importlib_resources  # needs pip install
+
+    _files = importlib_resources.files
+
+files = _files('allude')
+data_path = files / 'data'
+data_dir = str(data_path)
+
 
 class FuncWrap:
     def __init__(self, func):

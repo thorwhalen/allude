@@ -1,15 +1,17 @@
 """Gantt chart example."""
 
+# TODO: The interval units are very restrictive. Need tool to map interval specs.
 
 from typing import Iterable, Dict, Optional, Union, Callable
 from collections import defaultdict
+from functools import partial
 
 Annots = Iterable[Dict[str, Union[str, int, float]]]
 
 
-def _task_lines(annots: Annots):
+def _task_lines(annots: Annots, task="task", bt="bt", tt="tt"):
     for a in annots:
-        yield f"    \"{a['task']}\" : {a['bt']}, {a['tt']}"
+        yield f'    "{a[task]}" : {a[bt]}, {a[tt]}'
 
 
 def mermaid_gantt(
@@ -19,6 +21,9 @@ def mermaid_gantt(
     date_format: str = "s",
     axis_format: Optional[str] = None,
     group: Optional[Callable] = None,
+    task: str = "task",
+    bt: str = "bt",
+    tt: str = "tt",
 ) -> str:
     """
     Creates a Mermaid Gantt diagram string from the given annotations.
@@ -94,15 +99,18 @@ def mermaid_gantt(
     if title:
         mermaid_str += f"    title {title}\n"
 
+    # set the task, bt, and tt extraction fields
+    __task_lines = partial(_task_lines, task=task, bt=bt, tt=tt)
+
     if group is None:
-        mermaid_str += "\n".join(_task_lines(annots))
+        mermaid_str += "\n".join(__task_lines(annots))
     else:
         grouped_annots = defaultdict(list)
         for annot in annots:
             grouped_annots[group(annot)].append(annot)
         for group, group_annots in grouped_annots.items():
             mermaid_str += f"    Section {group}\n"
-            mermaid_str += "\n".join(_task_lines(group_annots))
+            mermaid_str += "\n".join(__task_lines(group_annots))
             mermaid_str += "\n"
 
     # Return the final Mermaid Gantt diagram string

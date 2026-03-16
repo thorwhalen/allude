@@ -2,11 +2,12 @@
 
 # TODO: The interval units are very restrictive. Need tool to map interval specs.
 
-from typing import Iterable, Dict, Optional, Union, Callable
+from typing import Dict, Optional, Union
+from collections.abc import Iterable, Callable
 from collections import defaultdict
 from functools import partial
 
-Annots = Iterable[Dict[str, Union[str, int, float]]]
+Annots = Iterable[dict[str, Union[str, int, float]]]
 
 
 def _task_lines(annots: Annots, task="task", bt="bt", tt="tt"):
@@ -17,10 +18,10 @@ def _task_lines(annots: Annots, task="task", bt="bt", tt="tt"):
 def mermaid_gantt(
     annots: Annots,
     *,
-    title: Optional[str] = None,
+    title: str | None = None,
     date_format: str = "s",
-    axis_format: Optional[str] = None,
-    group: Optional[Callable] = None,
+    axis_format: str | None = None,
+    group: Callable | None = None,
     task: str = "task",
     bt: str = "bt",
     tt: str = "tt",

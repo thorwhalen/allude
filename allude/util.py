@@ -2,7 +2,7 @@
 
 from functools import partial
 from operator import mul, methodcaller
-from typing import Callable
+from collections.abc import Callable
 
 from i2 import Sig
 from lined import Pipe, map_star
@@ -98,18 +98,19 @@ def mk_proportional_change_func(
 # ---------------------------------------------------------------------------------------
 # Extract elements from graphviz objects
 
-from typing import Tuple, List, Iterable
+from typing import Tuple, List
+from collections.abc import Iterable
 from pydot import Dot, graph_from_dot_data, Edge
 from graphviz.graphs import BaseGraph
 from graphviz import Source
 
 
-def edge_to_node_ids(edge: Edge) -> Tuple[str, str]:
+def edge_to_node_ids(edge: Edge) -> tuple[str, str]:
     """Returns the node id pair for the edge object"""
     return edge.get_source(), edge.get_destination()
 
 
-def get_graph_dot_obj(graph_spec) -> List[Dot]:
+def get_graph_dot_obj(graph_spec) -> list[Dot]:
     """Get a dot (graphs) object list from a variety of possible sources (postelizing inputs here)"""
     _original_graph_spec = graph_spec
     if isinstance(graph_spec, (BaseGraph, Source)):

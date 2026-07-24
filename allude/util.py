@@ -19,8 +19,8 @@ except AttributeError:
 
     _files = importlib_resources.files
 
-files = _files('allude')
-data_path = files / 'data'
+files = _files("allude")
+data_path = files / "data"
 data_dir = str(data_path)
 
 

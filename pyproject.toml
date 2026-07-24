@@ -10,8 +10,27 @@ version = "0.1.3"
 description = "Building precise functionality from vague specifications"
 readme = "README.md"
 requires-python = ">=3.10"
-keywords = []
-authors = []
+license = "Apache-2.0"
+keywords = [
+    "dag",
+    "graph",
+    "meshed",
+    "specification",
+    "dot",
+    "graphviz",
+    "pipeline",
+]
+authors = [
+    { name = "Thor Whalen" },
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 dependencies = [
     "i2",
     "lined",
@@ -20,11 +39,8 @@ dependencies = [
     "pydot",
 ]
 
-[project.license]
-text = "Apache-2.0"
-
 [project.urls]
-Homepage = "https://github.com/i2mint/allude"
+Homepage = "https://github.com/thorwhalen/allude"
 
 [project.optional-dependencies]
 dev = [
@@ -78,7 +94,7 @@ convention = "google"
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = [
-    "tests",
+    "allude",
 ]
 doctest_optionflags = [
     "NORMALIZE_WHITESPACE",
@@ -127,7 +143,8 @@ coverage_report_format = [
     "xml",
 ]
 exclude_paths = [
-    "examples",
+    "allude/examples",
+    "docsrc",
     "scrap",
 ]
 test_on_windows = true

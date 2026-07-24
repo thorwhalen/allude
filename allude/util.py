@@ -137,30 +137,32 @@ def get_edges(graph_spec, postprocess_edges=edge_to_node_ids):
     replace with any function that takes ``pydot.Edge`` as an input.
 
     >>> digraph_dot_source = '''
-    ... DIGRAPH{
+    ... digraph {
     ...     rain -> traffic
     ...     rain -> wet
-    ...     traffic, wet -> moody
+    ...     traffic -> moody
+    ...     wet -> moody
     ... }
     ... '''
     >>> assert (
     ...     get_edges(digraph_dot_source)
     ...     == get_edges(Source(digraph_dot_source))
-    ...     == [('rain', 'traffic'), ('rain', 'wet'), ('wet', 'moody')]
+    ...     == [('rain', 'traffic'), ('rain', 'wet'), ('traffic', 'moody'), ('wet', 'moody')]
     ... )
     >>>
     >>> graph_dot_source = '''
-    ... GRAPH{
+    ... graph {
     ...     rain -- traffic
     ...     rain -- wet
-    ...     traffic, wet -- moody
+    ...     traffic -- moody
+    ...     wet -- moody
     ... }
     ... '''
     >>>
     >>> assert (
     ...     get_edges(graph_dot_source)
     ...     == get_edges(Source(graph_dot_source))
-    ...     == [('rain', 'traffic'), ('rain', 'wet'), ('wet', 'moody')]
+    ...     == [('rain', 'traffic'), ('rain', 'wet'), ('traffic', 'moody'), ('wet', 'moody')]
     ... )
     """
     graphs = get_graph_dot_obj(graph_spec)

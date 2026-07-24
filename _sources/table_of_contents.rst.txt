@@ -1,0 +1,9 @@
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   module_docs/allude
+   module_docs/allude/base
+   module_docs/allude/examples/gantt
+   module_docs/allude/examples/sequence_diagram
+   module_docs/allude/util

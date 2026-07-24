@@ -1,0 +1,4 @@
+allude.examples.sequence_diagram
+================================
+.. automodule:: allude.examples.sequence_diagram
+   :members:

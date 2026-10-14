@@ -1,6 +1,6 @@
 metric,value
 schema_version,1.0
-timestamp,2026-10-14T03:33:59.404858Z
+timestamp,2026-10-14T03:34:01.122129Z
 commit_sha,6b780675cf8ad60ecc25938f0172b10a41c0ce47
 commit_message,"docs: README usage examples, tested as doctests; fix mk_proportional_change_func keyword calls
 
@@ -11,18 +11,18 @@ the advertised signature.
 
 Claude-Session: https://claude.ai/code/session_01SGNEkiJ1btHtZfwhRK7DV7"
 python_version,3.10
-metrics.umpyre_stats.num_functions,6678
-metrics.umpyre_stats.num_classes,1608
-metrics.umpyre_stats.total_lines,254418
-metrics.umpyre_stats.empty_lines,32905
-metrics.umpyre_stats.comment_lines,13463
-metrics.umpyre_stats.docs_lines,33756
-metrics.umpyre_stats.function_lines,108858
-metrics.umpyre_stats.empty_lines_ratio,0.12933440244007893
-metrics.umpyre_stats.comment_lines_ratio,0.052916853367293196
-metrics.umpyre_stats.function_lines_ratio,0.42787066952809943
-metrics.umpyre_stats.mean_lines_per_function,16.300988319856245
-metrics.umpyre_stats.files_analyzed,616
+metrics.umpyre_stats.num_functions,6989
+metrics.umpyre_stats.num_classes,1668
+metrics.umpyre_stats.total_lines,261000
+metrics.umpyre_stats.empty_lines,33987
+metrics.umpyre_stats.comment_lines,13959
+metrics.umpyre_stats.docs_lines,34698
+metrics.umpyre_stats.function_lines,113480
+metrics.umpyre_stats.empty_lines_ratio,0.1302183908045977
+metrics.umpyre_stats.comment_lines_ratio,0.05348275862068966
+metrics.umpyre_stats.function_lines_ratio,0.4347892720306513
+metrics.umpyre_stats.mean_lines_per_function,16.23694376877951
+metrics.umpyre_stats.files_analyzed,627
 metrics.umpyre_stats.pypi_version,0.1.4
 metrics.workflow_status.last_run_status,success
 metrics.workflow_status.last_success_timestamp,2026-07-24T18:23:31Z
@@ -43,4 +43,4 @@ metrics.coverage.branch_coverage,0.0
 metrics.coverage.statements_covered,0
 metrics.coverage.statements_total,0
 metrics.coverage.error,No coverage file found
-collection_duration_seconds,3.655085563659668
+collection_duration_seconds,3.2021124362945557

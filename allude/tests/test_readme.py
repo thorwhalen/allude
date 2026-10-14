@@ -12,6 +12,7 @@ def test_readme_examples():
     results = doctest.testfile(
         str(README),
         module_relative=False,
+        verbose=False,
         optionflags=doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS,
     )
     assert results.failed == 0, f"{results.failed} README example(s) failed"

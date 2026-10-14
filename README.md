@@ -89,7 +89,7 @@ Sketch a graph in dot syntax (a string, or a `graphviz` object) and get its edge
 
 ```
 
-Such functions support arithmetic, so you can scale them:
+You can scale such a function by multiplying it by a number:
 
 ```python
 >>> (rain_to_mood * 3)(10, 2)

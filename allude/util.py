@@ -71,6 +71,20 @@ def proportional_change(prior, evidence, proportion):
     return prior * (evidence * proportion)
 
 
+class _RenamedProportionalChange:
+    """``proportional_change`` exposed under a renamed signature (picklable)."""
+
+    def __init__(self, sig, argnames, name):
+        self.__signature__ = sig
+        self._argnames = argnames
+        self.__name__ = name
+
+    def __call__(self, *args, **kwargs):
+        bound = self.__signature__.bind(*args, **kwargs)
+        bound.apply_defaults()
+        return proportional_change(*(bound.arguments[k] for k in self._argnames))
+
+
 def mk_proportional_change_func(
     prior_argname,
     evidence_argname,
@@ -101,17 +115,9 @@ def mk_proportional_change_func(
             P(proportion_argname, P.KEYWORD_ONLY, default=proportion),
         ]
     )
-
-    def _proportional_change(*args, **kwargs):
-        bound = sig.bind(*args, **kwargs)
-        bound.apply_defaults()
-        a = bound.arguments
-        return proportional_change(
-            a[prior_argname], a[evidence_argname], a[proportion_argname]
-        )
-
-    _proportional_change.__signature__ = sig
-    _proportional_change.__name__ = name
+    _proportional_change = _RenamedProportionalChange(
+        sig, (prior_argname, evidence_argname, proportion_argname), name
+    )
     func = OperableFunc(_proportional_change)
     func.__name__ = name
     return func

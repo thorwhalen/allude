@@ -1,6 +1,6 @@
 """Utils"""
 
-from functools import partial
+import inspect
 from operator import mul, methodcaller
 from collections.abc import Callable
 
@@ -78,19 +78,41 @@ def mk_proportional_change_func(
     proportion_argname: str = None,
     name: str = None,
 ):
+    """Make a ``proportional_change`` function whose arguments carry your own names.
+
+    The returned function computes ``prior * (evidence * proportion)``, where
+    ``proportion`` is a keyword-only argument defaulting to ``proportion``.
+
+    >>> rain_to_mood = mk_proportional_change_func("mood", "rain", 0.5)
+    >>> rain_to_mood.__name__
+    'rain_to_mood'
+    >>> rain_to_mood(10, 2)
+    10.0
+    >>> rain_to_mood(mood=10, rain=2, mood_rain=0.1)
+    2.0
+    """
     name = name or f"{evidence_argname}_to_{prior_argname}"
     proportion_argname = proportion_argname or f"{prior_argname}_{evidence_argname}"
-    func = OperableFunc(partial(proportional_change, proportion=proportion))
-    # func = OperableFunc(proportional_change)
-    sig = Sig(func)
-    # sig = sig.ch_defaults(proportion=proportion)
-    sig = sig.ch_names(
-        prior=prior_argname,
-        evidence=evidence_argname,
-        proportion=proportion_argname,
+    P = inspect.Parameter
+    sig = inspect.Signature(
+        [
+            P(prior_argname, P.POSITIONAL_OR_KEYWORD),
+            P(evidence_argname, P.POSITIONAL_OR_KEYWORD),
+            P(proportion_argname, P.KEYWORD_ONLY, default=proportion),
+        ]
     )
 
-    sig(func)
+    def _proportional_change(*args, **kwargs):
+        bound = sig.bind(*args, **kwargs)
+        bound.apply_defaults()
+        a = bound.arguments
+        return proportional_change(
+            a[prior_argname], a[evidence_argname], a[proportion_argname]
+        )
+
+    _proportional_change.__signature__ = sig
+    _proportional_change.__name__ = name
+    func = OperableFunc(_proportional_change)
     func.__name__ = name
     return func
 

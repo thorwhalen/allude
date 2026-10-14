@@ -1,6 +1,6 @@
 """Utils"""
 
-from functools import partial
+import inspect
 from operator import mul, methodcaller
 from collections.abc import Callable
 
@@ -71,6 +71,20 @@ def proportional_change(prior, evidence, proportion):
     return prior * (evidence * proportion)
 
 
+class _RenamedProportionalChange:
+    """``proportional_change`` exposed under a renamed signature (picklable)."""
+
+    def __init__(self, sig, argnames, name):
+        self.__signature__ = sig
+        self._argnames = argnames
+        self.__name__ = name
+
+    def __call__(self, *args, **kwargs):
+        bound = self.__signature__.bind(*args, **kwargs)
+        bound.apply_defaults()
+        return proportional_change(*(bound.arguments[k] for k in self._argnames))
+
+
 def mk_proportional_change_func(
     prior_argname,
     evidence_argname,
@@ -78,19 +92,33 @@ def mk_proportional_change_func(
     proportion_argname: str = None,
     name: str = None,
 ):
+    """Make a ``proportional_change`` function whose arguments carry your own names.
+
+    The returned function computes ``prior * (evidence * proportion)``, where
+    ``proportion`` is a keyword-only argument defaulting to ``proportion``.
+
+    >>> rain_to_mood = mk_proportional_change_func("mood", "rain", 0.5)
+    >>> rain_to_mood.__name__
+    'rain_to_mood'
+    >>> rain_to_mood(10, 2)
+    10.0
+    >>> rain_to_mood(mood=10, rain=2, mood_rain=0.1)
+    2.0
+    """
     name = name or f"{evidence_argname}_to_{prior_argname}"
     proportion_argname = proportion_argname or f"{prior_argname}_{evidence_argname}"
-    func = OperableFunc(partial(proportional_change, proportion=proportion))
-    # func = OperableFunc(proportional_change)
-    sig = Sig(func)
-    # sig = sig.ch_defaults(proportion=proportion)
-    sig = sig.ch_names(
-        prior=prior_argname,
-        evidence=evidence_argname,
-        proportion=proportion_argname,
+    P = inspect.Parameter
+    sig = inspect.Signature(
+        [
+            P(prior_argname, P.POSITIONAL_OR_KEYWORD),
+            P(evidence_argname, P.POSITIONAL_OR_KEYWORD),
+            P(proportion_argname, P.KEYWORD_ONLY, default=proportion),
+        ]
     )
-
-    sig(func)
+    _proportional_change = _RenamedProportionalChange(
+        sig, (prior_argname, evidence_argname, proportion_argname), name
+    )
+    func = OperableFunc(_proportional_change)
     func.__name__ = name
     return func
 

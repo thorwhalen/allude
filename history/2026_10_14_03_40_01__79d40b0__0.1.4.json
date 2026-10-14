@@ -1,0 +1,47 @@
+{
+  "collection_duration_seconds": 3.5587217807769775,
+  "commit_message": "README usage examples (tested) + fix keyword calls of mk_proportional_change_func (#8)\n\n* docs: README usage examples, tested as doctests; fix mk_proportional_change_func keyword calls\n\nAnswers #7. The README examples run as a pytest test (allude/tests/test_readme.py).\nmk_proportional_change_func advertised renamed arguments (e.g. mood, rain, mood_rain)\nbut only accepted them positionally; keyword calls raised TypeError. It now binds\nthe advertised signature.\n\nClaude-Session: https://claude.ai/code/session_01SGNEkiJ1btHtZfwhRK7DV7\n\n* fix: keep mk_proportional_change_func results picklable; README wording; quiet doctest runner\n\nClaude-Session: https://claude.ai/code/session_01SGNEkiJ1btHtZfwhRK7DV7",
+  "commit_sha": "79d40b05c192bbdfc128c7b50ed78105195948e9",
+  "metrics": {
+    "coverage": {
+      "branch_coverage": 0.0,
+      "error": "No coverage file found",
+      "line_coverage": 0.0,
+      "statements_covered": 0,
+      "statements_total": 0
+    },
+    "umpyre_stats": {
+      "comment_lines": 13463,
+      "comment_lines_ratio": 0.0529156054460271,
+      "docs_lines": 33757,
+      "empty_lines": 32907,
+      "empty_lines_ratio": 0.12933921328176587,
+      "files_analyzed": 616,
+      "function_lines": 108851,
+      "function_lines_ratio": 0.42783306606295,
+      "mean_lines_per_function": 16.29749962569247,
+      "num_classes": 1609,
+      "num_functions": 6679,
+      "pypi_version": "0.1.4",
+      "total_lines": 254424
+    },
+    "wily": {
+      "cyclomatic_avg": 0.0,
+      "error": "wily report failed: Usage: wily report [OPTIONS] FILE [METRICS]...\nTry 'wily report --help' for help.\n\nError: Invalid value for '-f' / '--format': 'json' is not one of 'CONSOLE', 'HTML'.\n",
+      "files_analyzed": 0,
+      "maintainability_index": 0.0,
+      "total_loc": 0
+    },
+    "workflow_status": {
+      "last_run_status": "success",
+      "last_success_timestamp": "2026-10-14T03:39:28Z",
+      "recent_failure_count": 0,
+      "run_url": "https://github.com/thorwhalen/allude/actions/runs/38507342809",
+      "total_runs_analyzed": 10
+    }
+  },
+  "python_version": "3.10",
+  "schema_version": "1.0",
+  "timestamp": "2026-10-14T03:40:01.323714Z",
+  "workflow_status": {}
+}

@@ -1,0 +1,14 @@
+# allude
+
+> Building precise functionality from vague specifications
+
+
+## Pages in this subsection
+
+- [allude](allude.html.md): Aladdin’s lamp of python functions
+- [allude.base](allude.base.html.md): Base functionality
+- [allude.util](allude.util.html.md): | &#96;edge_to_node_ids&#96;(edge)                          | Returns the node id pair for the edge object  ...
+
+## Optional
+
+- [Top-level llms.txt](../llms.txt): Complete documentation index.

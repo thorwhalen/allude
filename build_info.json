@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "built_at": "2026-10-14T03:40:47Z",
+  "package": {
+    "name": "allude",
+    "version": "0.1.5",
+    "display_name": "allude",
+    "source": "pyproject.toml"
+  },
+  "git": {
+    "available": true,
+    "commit": "f028efd59d9802405ad48bb0a6d21bec5f846ca3",
+    "short_commit": "f028efd",
+    "branch": "master",
+    "tags": [
+      "0.1.5"
+    ],
+    "dirty": false,
+    "remote_url": "https://github.com/thorwhalen/allude",
+    "commit_url": "https://github.com/thorwhalen/allude/commit/f028efd59d9802405ad48bb0a6d21bec5f846ca3",
+    "error": null
+  },
+  "ci": {
+    "provider": "github",
+    "repository": "thorwhalen/allude",
+    "sha": "79d40b05c192bbdfc128c7b50ed78105195948e9",
+    "sha_in_history": true,
+    "ref": "refs/heads/master",
+    "ref_name": "master",
+    "run_id": "38507342814",
+    "run_url": "https://github.com/thorwhalen/allude/actions/runs/38507342814",
+    "server_url": "https://github.com"
+  },
+  "tools": {
+    "epythet": "0.2.17",
+    "sphinx": "9.1.0",
+    "docutils": "0.22.4",
+    "python": "3.12.15"
+  },
+  "config": {
+    "theme": "auto",
+    "html_theme": "furo",
+    "accent": "#006d41",
+    "mode": "auto",
+    "api_generator": "autosummary",
+    "ignore": [
+      "tests/",
+      "scrap/",
+      "examples/"
+    ],
+    "agent_outputs": true,
+    "aggregates": [
+      "md"
+    ],
+    "ai_artifacts": true,
+    "provenance": true,
+    "docs_dir": "docsrc"
+  },
+  "site": {
+    "modules_documented": 3,
+    "objects_documented": 4
+  },
+  "pypi": {
+    "checked": true,
+    "latest": "0.1.5",
+    "relation": "same",
+    "error": null
+  },
+  "reproduce": "git clone https://github.com/thorwhalen/allude && cd allude\ngit checkout f028efd59d9802405ad48bb0a6d21bec5f846ca3\npip install \"epythet==0.2.17\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "warnings": [],
+  "alignment": {
+    "aligned": true,
+    "notes": []
+  }
+}

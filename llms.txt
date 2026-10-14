@@ -1,0 +1,21 @@
+# allude
+
+> Building precise functionality from vague specifications
+
+
+## Pages
+
+- [allude](index.html.md): Building precise functionality from vague specifications
+- [API reference](api.html.md): | &#96;allude&#96;   | Aladdin's lamp of python functions   |
+- [allude](_autosummary/allude.html.md): Aladdin’s lamp of python functions
+- [allude.base](_autosummary/allude.base.html.md): Base functionality
+- [allude.util](_autosummary/allude.util.html.md): | &#96;edge_to_node_ids&#96;(edge)                          | Returns the node id pair for the edge object  ...
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-14 03:40 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
+
+## Optional
+
+- [allude.md](allude.md): Complete documentation in a single file.
+
+## Build
+
+- [build_info.json](build_info.json): build provenance (commit, version, tool versions, whether the docs match the package)

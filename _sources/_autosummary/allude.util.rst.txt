@@ -1,0 +1,25 @@
+allude.util
+===========
+
+.. automodule:: allude.util
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      edge_to_node_ids
+      func_op_func
+      func_op_obj
+      get_edges
+      get_graph_dot_obj
+      mk_proportional_change_func
+      proportional_change
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      FuncWrap
+      OperableFunc
+   

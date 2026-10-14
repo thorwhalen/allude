@@ -1,4 +1,0 @@
-allude
-======
-.. automodule:: allude
-   :members:

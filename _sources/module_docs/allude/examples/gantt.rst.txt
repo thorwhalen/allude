@@ -1,4 +1,0 @@
-allude.examples.gantt
-=====================
-.. automodule:: allude.examples.gantt
-   :members:

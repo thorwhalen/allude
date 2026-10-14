@@ -1,0 +1,14 @@
+﻿allude
+======
+
+.. automodule:: allude
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   base
+   util

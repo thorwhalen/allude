@@ -1,0 +1,47 @@
+{
+  "collection_duration_seconds": 3.24466609954834,
+  "commit_message": "Merge fddeb394851a6205186ec91d7edcb9e36e396ee2 into 9f937669fe0e78a7de16a6bffe334c172f30357a",
+  "commit_sha": "c328c6ca868b6dda4845299b056039a5787122fc",
+  "metrics": {
+    "coverage": {
+      "branch_coverage": 0.0,
+      "error": "No coverage file found",
+      "line_coverage": 0.0,
+      "statements_covered": 0,
+      "statements_total": 0
+    },
+    "umpyre_stats": {
+      "comment_lines": 13959,
+      "comment_lines_ratio": 0.05348152916024919,
+      "docs_lines": 34699,
+      "empty_lines": 33989,
+      "empty_lines_ratio": 0.1302230600062834,
+      "files_analyzed": 627,
+      "function_lines": 113473,
+      "function_lines_ratio": 0.43475245779790506,
+      "mean_lines_per_function": 16.233619456366238,
+      "num_classes": 1669,
+      "num_functions": 6990,
+      "pypi_version": "0.1.4",
+      "total_lines": 261006
+    },
+    "wily": {
+      "cyclomatic_avg": 0.0,
+      "error": "wily report failed: Usage: wily report [OPTIONS] FILE [METRICS]...\nTry 'wily report --help' for help.\n\nError: Invalid value for '-f' / '--format': 'json' is not one of 'CONSOLE', 'HTML'.\n",
+      "files_analyzed": 0,
+      "maintainability_index": 0.0,
+      "total_loc": 0
+    },
+    "workflow_status": {
+      "last_run_status": "success",
+      "last_success_timestamp": "2026-10-14T03:34:30Z",
+      "recent_failure_count": 1,
+      "run_url": "https://github.com/thorwhalen/allude/actions/runs/38506858451",
+      "total_runs_analyzed": 10
+    }
+  },
+  "python_version": "3.10",
+  "schema_version": "1.0",
+  "timestamp": "2026-10-14T03:37:23.410400Z",
+  "workflow_status": {}
+}
